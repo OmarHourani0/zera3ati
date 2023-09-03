@@ -3,8 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:open_url/open_url.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:zera3ati_app/screens/help_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -78,7 +77,7 @@ class MainDrawer extends StatelessWidget {
                   ),
             ),
             onTap: () {
-              showInfoMessage();
+              Get.to(const HelpScreen());
             },
           ),
           ListTile(
@@ -94,34 +93,15 @@ class MainDrawer extends StatelessWidget {
                     fontSize: 24,
                   ),
             ),
-            //   onTap: () {},
-            // ),
-            // onTap: () async{
-            //   const url = 'http://www.ncare.gov.jo/DefaultEN.aspx';
-            //   if (await canLaunchUrlString(url)) {
-            //     await launch(url);
-            //   } else {
-            //     throw 'Could not launch $url';
-            //   }
-            // },
-            // ),
-
-
             onTap: () async {
               const url = 'http://www.ncare.gov.jo/DefaultEN.aspx';
-              //Uri uri = Uri.parse(url);
-              if (await canLaunchUrl(Uri.parse(url))) {
-                await launchUrl(Uri.parse(url));
-              } else {
-                const SnackBar(content: Text('Could not launch $url'));
-              }
+              await launch(
+                url,
+                forceSafariVC: false,
+                forceWebView: true,
+                enableJavaScript: true,
+              );
             },
-
-            // onTap: () {
-            //   //launchUrlString('http://www.ncare.gov.jo/DefaultEN.aspx');
-            //   launchUrlString(
-            //       'https://docs.flutter.dev/get-started/install/macos');
-            // },
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:zera3ati_app/screens/login_screen.dart';
@@ -13,14 +14,24 @@ final theme = ThemeData(
     brightness: Brightness.dark,
     seedColor: const Color.fromARGB(255, 4, 111, 0),
   ),
+  //scaffoldBackgroundColor: Color.fromARGB(255, 2, 52, 0),
+
   textTheme: GoogleFonts.latoTextTheme(),
 );
 
+
 void main() {
-  runApp(
-    const ProviderScope(
-      child: App(),
-    ),
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]).then(
+    (fn) {
+      runApp(
+        const ProviderScope(
+          child: App(),
+        ),
+      );
+    },
   );
 }
 
@@ -29,7 +40,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     //final isIOS = Platform.isIOS;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,

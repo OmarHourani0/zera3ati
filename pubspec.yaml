@@ -47,6 +47,7 @@ dependencies:
   open_url: ^2.0.1
   image_picker: ^1.0.4
   adaptive_theme: ^3.4.0
+  #flutter_device_info: ^5.0.2
   #flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:

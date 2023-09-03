@@ -56,18 +56,23 @@ class _MainScreen extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    print(screenWidth);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Page'),
       ),
       drawer: const MainDrawer(),
-      body: const Center(
-        child: Text(
-          'Hello Farmers!!',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 48,
+      body: SingleChildScrollView(
+        child: const Center(
+          child: Text(
+            'Hello Farmers!!',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 48,
+            ),
           ),
         ),
       ),

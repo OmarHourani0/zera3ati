@@ -36,8 +36,14 @@ class WeatherScreen extends StatelessWidget {
     }
   }
 
+  Future<void> autoRefresh() {
+    return weatherController.fetchWeatherData();
+  }
+
   @override
   Widget build(BuildContext context) {
+    autoRefresh();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
