@@ -12,7 +12,7 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void showInfoMessage() {
+    void showHelpMessage() {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -29,15 +29,35 @@ class MainDrawer extends StatelessWidget {
       );
     }
 
+    void showFunMessage() {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Center(
+            child: Text(
+              "YOU A BITCH ASS NIGGA WHO NEEDS EXTRA HELP",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Drawer(
+      elevation: 20,
       child: Column(
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).colorScheme.onSecondary,
-                  Theme.of(context).colorScheme.background.withOpacity(0.85),
+                  // Theme.of(context).colorScheme.onSecondary,
+                  // Theme.of(context).colorScheme.background.withOpacity(0.85),
+                  const Color.fromARGB(255, 65, 96, 66).withOpacity(0.9),
+                  const Color.fromARGB(255, 65, 96, 66).withOpacity(0.45)
                 ],
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
@@ -79,6 +99,10 @@ class MainDrawer extends StatelessWidget {
             onTap: () {
               Get.to(const HelpScreen());
             },
+            visualDensity: VisualDensity.comfortable,
+            onLongPress: () {
+              showHelpMessage();
+            },
           ),
           ListTile(
             leading: Icon(
@@ -101,6 +125,10 @@ class MainDrawer extends StatelessWidget {
                 forceWebView: true,
                 enableJavaScript: true,
               );
+            },
+            visualDensity: VisualDensity.comfortable,
+            onLongPress: () {
+              showFunMessage();
             },
           ),
         ],

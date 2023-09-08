@@ -77,7 +77,9 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Disease Detection')),
+      appBar: AppBar(
+        title: const Text('Disease Detection'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,11 +130,11 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
                         ),
                       ),
                       Text(
-                      'Pick the crop',
-                      style: TextStyle(
-                        color: Colors.grey,
+                        'Pick the crop',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
                       ),
-                    ),
                     ],
                   ),
                   const SizedBox(width: 16),
@@ -227,53 +229,75 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
             const SizedBox(height: 26),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color.fromARGB(255, 0, 145, 212).withOpacity(0.55),
-                      const Color.fromARGB(255, 0, 145, 212).withOpacity(0.9),
-                    ],
-                  ), // Set the background color
-                  borderRadius:
-                      BorderRadius.circular(10), // Add rounded corners
-                ),
-                padding: const EdgeInsets.all(16), // Add padding inside the box
-                child: const SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      SizedBox(width: 10),
                       Text(
-                        '//Dynamic title based on plant condition (Either eno its good or diseased)',
+                        'Disease detection AI has a 95% accuracy',
                         style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        //make Zaina or Hammad add
-                        'You guys will add personalised text here based on the plant\'s condition',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'More content...\nYall are gay.\n\n\n\n\n\n\n\n\n\n\nAnd text here too.',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
+                          color: Colors.grey,
+                          //decoration: TextDecoration.underline,
                         ),
                       ),
                     ],
                   ),
-                ),
+                  Container(
+                    //height: 200,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          const Color.fromARGB(255, 0, 145, 212)
+                              .withOpacity(0.55),
+                          const Color.fromARGB(255, 0, 145, 212)
+                              .withOpacity(0.9),
+                        ],
+                      ), // Set the background color
+                      borderRadius:
+                          BorderRadius.circular(10), // Add rounded corners
+                    ),
+                    padding:
+                        const EdgeInsets.all(16), // Add padding inside the box
+                    child: const SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '//Dynamic title based on plant condition (Either eno its good or diseased)',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            //make Zaina or Hammad add
+                            'You guys will add personalised text here based on the plant\'s condition',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'More content...\nYall are gay.\n\n\n\n\nAnd text here too.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            const SizedBox(height: 26),
           ],
         ),
       ),

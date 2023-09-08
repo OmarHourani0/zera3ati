@@ -13,9 +13,9 @@ class WeatherWidget extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              const Color.fromARGB(255, 42, 132, 0).withOpacity(0.45),
-              const Color.fromARGB(255, 42, 132, 0).withOpacity(0.75),
-              const Color.fromARGB(255, 42, 132, 0).withOpacity(0.95),
+              const Color.fromARGB(255, 0, 64, 117),
+              const Color.fromARGB(255, 16, 65, 105),
+              const Color.fromARGB(255, 26, 52, 73),
             ],
             begin: Alignment.bottomLeft,
             end: Alignment.topRight,

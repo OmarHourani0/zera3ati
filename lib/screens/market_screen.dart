@@ -59,57 +59,64 @@ class _MarketScreen extends State<MarketScreen> {
         automaticallyImplyLeading: false,
         title: const Text("Market"),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            //const SizedBox(height: 60),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(40,30,20,60),
-              child: SizedBox(
-                //width: 350,
-                child: Text(
-                  'Market data for today...',
-                  style: GoogleFonts.lato(
-                    fontSize: 36,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/background_dark.jpg'),
+                fit: BoxFit.cover),
+          ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              //const SizedBox(height: 60),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(40,30,20,60),
+                child: SizedBox(
+                  //width: 350,
+                  child: Text(
+                    'Market data for today...',
+                    style: GoogleFonts.lato(
+                      fontSize: 36,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 40,
-              width: 340,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Daily Market Prices',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground),
+              SizedBox(
+                height: 40,
+                width: 340,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Daily Market Prices',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground),
+                  ),
                 ),
               ),
-            ),
-            const WeatherWidget(),
-            const SizedBox(height: 40),
-            SizedBox(
-              height: 40,
-              width: 340,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Market Trends',
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground),
+              const WeatherWidget(),
+              const SizedBox(height: 40),
+              SizedBox(
+                height: 40,
+                width: 340,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Market Trends',
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground),
+                  ),
                 ),
               ),
-            ),
-            const WeatherWidget(),
-            SizedBox(height: 20),
-          ],
+              const WeatherWidget(),
+              SizedBox(height: 100),
+            ],
+          ),
         ),
       ),
       // bottomNavigationBar: navigationBar(page: 3),

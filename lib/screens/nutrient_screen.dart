@@ -44,6 +44,7 @@ class _NutrientScreen extends State<NutrientScreen> {
   double nitrogenLevel = 0.0;
   double phosphorusLevel = 0.0;
   double potassiumLevel = 0.0;
+  double phLevel = 0.0;
 
   @override
   void initState() {
@@ -104,6 +105,14 @@ class _NutrientScreen extends State<NutrientScreen> {
                           newValuee = newValue.toString();
                         });
                       },
+                      autofocus: false,
+                      hint: Text('data'),                      
+                      iconEnabledColor: Colors.grey,
+                      borderRadius: BorderRadius.circular(20),
+                      elevation: 10,
+                      dropdownColor: Color.fromARGB(255, 61, 79, 88),
+                      enableFeedback: true,
+                      focusColor: Colors.grey,
                       items: crops.map((crop) {
                         return DropdownMenuItem<String>(
                           value: crop,
@@ -136,6 +145,14 @@ class _NutrientScreen extends State<NutrientScreen> {
                           newValuee = newValue.toString();
                         });
                       },
+                      autofocus: false,
+                      hint: Text('data'),  
+                      iconEnabledColor: Colors.grey,
+                      borderRadius: BorderRadius.circular(20),
+                      elevation: 10,
+                      dropdownColor: Colors.brown,
+                      enableFeedback: true,
+                      focusColor: Colors.grey,
                       items: landType.map((land) {
                         return DropdownMenuItem<String>(
                           value: land,
@@ -204,7 +221,43 @@ class _NutrientScreen extends State<NutrientScreen> {
                       );
                     },
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          'pH Value',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        flex: 1,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(
+                              () {
+                                phLevel = double.tryParse(value) ?? 0.0;
+                              },
+                            );
+                          },
+                          style: TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            labelText: 'Value',
+                            labelStyle: TextStyle(color: Colors.white),
+                            border: OutlineInputBorder(),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            suffixText: 'pH',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -265,7 +318,7 @@ class _NutrientScreen extends State<NutrientScreen> {
                 ),
                 padding: const EdgeInsets.all(16), // Add padding inside the box
                 child: const SingleChildScrollView(
-                  child: Column(                    
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(

@@ -46,58 +46,74 @@ class _FarmingScreen extends State<FarmingScreen> {
         automaticallyImplyLeading: false,
         title: const Text('Farming Screen'),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 50),
-          const SizedBox(
-            //width: 350,
-            child: Text(
-              'How can we help?',
-              style: TextStyle(
-                fontSize: 48,
-                color: Colors.white,
-              ),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Colors.black12, Colors.black87],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/background_dark.jpg'),
+                fit: BoxFit.cover),
           ),
-          const SizedBox(height: 50),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 2.5,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 65,
+          child: Column(
+            children: [
+              const SizedBox(height: 50),
+              const SizedBox(
+                //width: 350,
+                child: Text(
+                  'How can we help?',
+                  style: TextStyle(
+                    fontSize: 48,
+                    color: Colors.white,
+                  ),
                 ),
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  final titles = [
-                    "Nutrient Management",
-                    "Disease Detection",
-                  ];
-                  final icons = [
-                    Icons.forest_outlined,
-                    Icons.bug_report,
-                  ];
-                  final List<VoidCallback> functionList = [
-                    () {
-                      Get.to(const NutrientScreen());
-                    },
-                    () {
-                      Get.to(const DiseaseDetectionScreen());
-                    },
-                  ];
-                  return FarmingGridItem(
-                    title: titles[index],
-                    icon: icons[index],
-                    onPressed: functionList[index],
-                  );
-                },
               ),
-            ),
+              const SizedBox(height: 50),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      childAspectRatio: 2.5,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 65,
+                    ),
+                    itemCount: 2,
+                    itemBuilder: (context, index) {
+                      final titles = [
+                        "Nutrient Management",
+                        "Disease Detection",
+                      ];
+                      final icons = [
+                        Icons.forest_outlined,
+                        Icons.bug_report,
+                      ];
+                      final List<VoidCallback> functionList = [
+                        () {
+                          Get.to(const NutrientScreen());
+                        },
+                        () {
+                          Get.to(const DiseaseDetectionScreen());
+                        },
+                      ];
+                      return FarmingGridItem(
+                        title: titles[index],
+                        icon: icons[index],
+                        onPressed: functionList[index],
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

@@ -2,26 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zera3ati_app/screens/main_screen.dart';
 import 'package:lottie/lottie.dart';
-import 'package:zera3ati_app/screens/signup_pscreen.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
 
-  late final String _password;
-  late final String _idNumber;
+  String? _password;
+  String? _idNumber;
+  String? _confirm;
+
+  bool passwordcheck() {
+    setState(() {
+      if (_password == _confirm || (_password!.length != _confirm!.length)) {
+        const SnackBar(
+          content: Center(
+            child: Text(
+              "You passwords dont match, please try again.",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        );
+      }
+    });
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Sign up'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -30,13 +49,22 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
-                const SizedBox(
-                  height: 10,
-                ),
+                // const SizedBox(
+                //   height: 16,
+                // ),
                 Image.asset(
-                  //'assets/IMG_9186.PNG',
                   'assets/logo3.png',
                   scale: 5,
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                Text(
+                  'Your path to smart agriculture start here...',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 30,
+                  ),
                 ),
                 const SizedBox(
                   height: 22,
@@ -63,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   style: const TextStyle(color: Colors.white),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 24),
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Password',
@@ -87,68 +115,47 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   style: const TextStyle(color: Colors.white),
                 ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Confirm password',
+                    hintText: "Enter your pasword again",
+                    border: OutlineInputBorder(),
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your password again';
+                    } else if (passwordcheck() == true) {
+                      return 'Your passwords dont match. Please try again nigga';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _confirm = value!;
+                  },
+                  style: const TextStyle(color: Colors.white),
+                ),
                 // const SizedBox(
                 //   height: 16,
                 // ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            Get.to(const MainScreen());
-                          }
-                        },
-                        style: const ButtonStyle(
-                            foregroundColor:
-                                MaterialStatePropertyAll(Colors.white),
-                            backgroundColor: MaterialStatePropertyAll(
-                                Color.fromARGB(255, 92, 0, 0))),
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Get.to(const MainScreen());
+                      }
+                    },
+                    style: const ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                        backgroundColor: MaterialStatePropertyAll(
+                            Color.fromARGB(255, 92, 0, 0))),
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
-                    //SizedBox(width: 70),
-                    // Column(
-                    //   children: [
-                    //     SizedBox(height: 30),
-                    //     TextButton(
-                    //       onPressed: () {
-                    //         Get.to(SignupPage());
-                    //       },
-                    //       child: Text(
-                    //         'Dont have an account yet?',
-                    //         style: TextStyle(
-                    //           color: Colors.grey,
-                    //           decoration: TextDecoration.underline,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //SizedBox(height: 30),
-                    TextButton(
-                      onPressed: () {
-                        Get.to(SignupPage());
-                      },
-                      child: Text(
-                        'Dont have an account yet?',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
                 SizedBox(height: 30),
                 // SingleChildScrollView(

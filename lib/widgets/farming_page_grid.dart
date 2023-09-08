@@ -23,13 +23,11 @@ class FarmingGridItem extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          border:
-              Border.all(color: const Color.fromARGB(255, 0, 0, 0), width: 2),
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
             colors: [
-              Colors.green.withOpacity(0.55),
-              Colors.green.withOpacity(0.9),
+              const Color.fromARGB(255, 63, 88, 34),
+              const Color.fromARGB(255, 48, 111, 51),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

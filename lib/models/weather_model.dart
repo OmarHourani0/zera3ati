@@ -4,6 +4,7 @@ class WeatherModel {
   final String weatherDescription;
   final int humidity;
   final double windSpeed;
+  //final double rainfall;
 
   WeatherModel({
     required this.cityName,
@@ -11,5 +12,6 @@ class WeatherModel {
     required this.weatherDescription,
     required this.humidity,
     required this.windSpeed,
+    //required this.rainfall,
   });
 }

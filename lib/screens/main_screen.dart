@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zera3ati_app/screens/call_screen.dart';
 import 'package:zera3ati_app/screens/farming_screen.dart';
 import 'package:zera3ati_app/screens/market_screen.dart';
 import 'package:zera3ati_app/screens/test_screen.dart';
@@ -63,22 +64,51 @@ class _MainScreen extends State<MainScreen> {
       appBar: AppBar(
         title: const Text('Main Page'),
       ),
+      floatingActionButton: SizedBox(
+        height: 66,
+        width: 66,
+        child: FloatingActionButton(
+          onPressed: () {
+            Get.to(CallScreen());
+          },
+          child: Icon(Icons.call, size: 36),
+          highlightElevation: 20,
+          backgroundColor: Colors.green[900],
+          foregroundColor: Colors.white,
+          isExtended: true,
+          enableFeedback: true,
+          
+        ),
+      ),
       drawer: const MainDrawer(),
-      body: SingleChildScrollView(
-        child: const Center(
-          child: Text(
-            'Hello Farmers!!',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 48,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Colors.black12, Colors.black87],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/background_dark.jpg'),
+                fit: BoxFit.cover),
+          ),
+          child: Center(
+            child: Text(
+              'Hello Farmers!!',
+              style: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+                fontSize: 48,
+              ),
             ),
           ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        onTap: _onItemTapped,        
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
@@ -103,6 +133,7 @@ class _MainScreen extends State<MainScreen> {
               Icons.attach_money,
             ),
             label: 'Market',
+            //label: 'BITCH',
           ),
         ],
         selectedLabelStyle: const TextStyle(color: Colors.white, fontSize: 16),

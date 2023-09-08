@@ -22,6 +22,7 @@ class WeatherController extends GetxController {
       weatherDescription: data['weather'][0]['description'],
       humidity: data['main']['humidity'],
       windSpeed: data['wind']['speed'],
+      //rainfall: data['rain']['1h'],
     );
 
     weatherData.value = weatherModel;
