@@ -159,7 +159,7 @@ class _App extends State<App> {
   Widget build(BuildContext context) {
     //final isIOS = Platform.isIOS;
     return GetMaterialApp(
-      theme: theme,
+      theme: theme,      
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
     );
