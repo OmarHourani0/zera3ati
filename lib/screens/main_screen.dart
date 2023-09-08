@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zera3ati_app/screens/call_screen.dart';
 import 'package:zera3ati_app/screens/farming_screen.dart';
 import 'package:zera3ati_app/screens/market_screen.dart';
-import 'package:zera3ati_app/screens/test_screen.dart';
 import 'package:zera3ati_app/screens/weather_screen.dart';
-import 'package:zera3ati_app/widgets/bottom_bar.dart';
 import 'package:zera3ati_app/widgets/main_drawer.dart';
 import 'package:get/get.dart';
 
