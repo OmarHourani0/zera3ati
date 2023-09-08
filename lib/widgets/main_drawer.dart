@@ -54,10 +54,10 @@ class MainDrawer extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  // Theme.of(context).colorScheme.onSecondary,
-                  // Theme.of(context).colorScheme.background.withOpacity(0.85),
-                  const Color.fromARGB(255, 65, 96, 66).withOpacity(0.9),
-                  const Color.fromARGB(255, 65, 96, 66).withOpacity(0.45)
+                  Theme.of(context).colorScheme.onSecondary,
+                  Theme.of(context).colorScheme.background.withOpacity(0.85),
+                  //const Color.fromARGB(255, 65, 96, 66).withOpacity(0.9),
+                  //const Color.fromARGB(255, 65, 96, 66).withOpacity(0.45)
                 ],
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
