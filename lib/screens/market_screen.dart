@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:zera3ati_app/screens/farming_screen.dart';
 import 'package:zera3ati_app/screens/main_screen.dart';
 import 'package:zera3ati_app/screens/weather_screen.dart';
-import 'package:zera3ati_app/widgets/bottom_bar.dart';
 import 'package:zera3ati_app/widgets/market_page_widget.dart';
 
 class MarketScreen extends StatefulWidget {

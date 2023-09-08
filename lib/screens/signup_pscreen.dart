@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zera3ati_app/screens/main_screen.dart';
-import 'package:lottie/lottie.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -14,6 +13,7 @@ class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _password;
+  // ignore: unused_field
   String? _idNumber;
   String? _confirm;
 

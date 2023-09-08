@@ -1,3 +1,4 @@
+// ignore: unnecessary_import
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:zera3ati_app/screens/login_screen.dart';
 import 'package:get/get.dart';
+// ignore: unnecessary_import
 import 'package:flutter/cupertino.dart'; // Import Cupertino widgets
+// ignore: unused_import
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 final theme = ThemeData(

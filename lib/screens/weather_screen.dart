@@ -4,8 +4,8 @@ import 'package:zera3ati_app/data/weather_data.dart';
 import 'package:zera3ati_app/screens/farming_screen.dart';
 import 'package:zera3ati_app/screens/main_screen.dart';
 import 'package:zera3ati_app/screens/market_screen.dart';
-import 'package:zera3ati_app/widgets/bottom_bar.dart';
 
+// ignore: must_be_immutable
 class WeatherScreen extends StatelessWidget {
   final weatherController = Get.put(WeatherController());
 

@@ -3,9 +3,7 @@ import 'package:zera3ati_app/screens/disease_screen.dart';
 import 'package:zera3ati_app/screens/main_screen.dart';
 import 'package:zera3ati_app/screens/market_screen.dart';
 import 'package:zera3ati_app/screens/nutrient_screen.dart';
-import 'package:zera3ati_app/screens/test_screen.dart';
 import 'package:zera3ati_app/screens/weather_screen.dart';
-import 'package:zera3ati_app/widgets/bottom_bar.dart';
 import 'package:zera3ati_app/widgets/farming_page_grid.dart';
 import 'package:get/get.dart';
 

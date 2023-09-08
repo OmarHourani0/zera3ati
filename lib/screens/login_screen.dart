@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zera3ati_app/screens/main_screen.dart';
-import 'package:lottie/lottie.dart';
 import 'package:zera3ati_app/screens/signup_pscreen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,7 +13,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
+  // ignore: unused_field
   late final String _password;
+  // ignore: unused_field
   late final String _idNumber;
 
   @override
