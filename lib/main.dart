@@ -15,10 +15,13 @@ final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.dark,
-    seedColor: const Color.fromARGB(255, 4, 111, 0),
+    seedColor: const Color.fromARGB(255, 4, 111, 0),    
   ),
   textTheme: GoogleFonts.latoTextTheme(),
 );
+
+
+//        CHATGPT CODES (they suck ass and we dont have a theme yet)...
 
 // final theme = ThemeData.dark().copyWith(
 //   primaryColor: Color.fromARGB(255, 4, 111, 0), // Set primary color
@@ -58,7 +61,7 @@ final theme = ThemeData(
 //     ),
 //   ),
 // );
-
+//.............................................................................................................
 // final theme = ThemeData.dark().copyWith(
 //   // Define your primary color here
 //   primaryColor: Color.fromARGB(255, 4, 111, 0),
@@ -90,7 +93,7 @@ final theme = ThemeData(
 //     ),
 //   ),
 // );
-
+//.............................................................................................................
 // final theme = ThemeData(
 //         textTheme: Theme.of(context).textTheme.apply(
 //               bodyColor: Colors.white,
@@ -124,6 +127,8 @@ final theme = ThemeData(
 //             ),
 //           ),
 //         ));
+//.............................................................................................................
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
