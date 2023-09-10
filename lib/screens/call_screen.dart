@@ -15,7 +15,7 @@ class CallScreen extends StatefulWidget {
 class _CallScreenState extends State<CallScreen> {
   String channelName = "CallToken";
   String token =
-      "007eJxTYOiSDDrXc7Ml+X1ktFnMLNWPSq/Z/U2ZRE6lmd9693X5wyMKDOZJxskpBiaJpmbmpiYGaSmJSUYpycnJhsZmSebJZkYWVny/UhoCGRnqFeqZGBkgEMTnZHBOzMkJyc9OzWNgAAAESiFc";
+      "007eJxTYLic47DcvMY03nsur+6yh6fW72J9zKPGWnFpsbACp3b0Rh8FBvMk4+QUA5NEUzNzUxODtJTEJKOU5ORkQ2OzJPNkMyOLfTV/UhoCGRk+xU9jYIRCEJ+TwTkxJyckPzs1j4EBAFbnIBk=";
 
   int uid = 0; // uid of the local user
 
@@ -184,6 +184,10 @@ class _CallScreenState extends State<CallScreen> {
       return const Text(
         'Join a channel',
         textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
       );
     }
   }
@@ -243,6 +247,10 @@ class _CallScreenState extends State<CallScreen> {
       return Text(
         msg,
         textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+        ),
       );
     }
   }

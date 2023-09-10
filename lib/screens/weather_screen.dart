@@ -100,8 +100,8 @@ class WeatherScreen extends StatelessWidget {
                                   .toUpperCase(),
                               style: const TextStyle(
                                 fontSize: 30,
-                                color: Colors.white,
-                              ),
+                                color: Colors.white,                                
+                              ),                              
                             ),
                             const SizedBox(height: 4),
                             Text(
@@ -177,7 +177,7 @@ class WeatherScreen extends StatelessWidget {
                         ],
                       ), // Set the background color
                       borderRadius:
-                          BorderRadius.circular(10), // Add rounded corners
+                          BorderRadius.circular(30), // Add rounded corners
                     ),
                     padding:
                         const EdgeInsets.all(16), // Add padding inside the box

@@ -142,7 +142,10 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
                     children: [
                       ElevatedButton.icon(
                         onPressed: _selectImage,
-                        icon: const Icon(Icons.upload_file_sharp),
+                        icon: const Icon(
+                          Icons.upload_file_sharp,
+                          color: Colors.grey,
+                        ),
                         label: const Text(
                           'Upload Image',
                           style: TextStyle(color: Colors.white),
@@ -151,7 +154,10 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
                       const SizedBox(height: 6),
                       ElevatedButton.icon(
                         onPressed: _takePicture,
-                        icon: const Icon(Icons.camera_alt),
+                        icon: const Icon(
+                          Icons.camera_alt,
+                          color: Colors.grey,
+                        ),
                         label: const Text(
                           'Take Picture',
                           style: TextStyle(color: Colors.white),
@@ -216,13 +222,37 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
                       // ),
                     ],
                   ),
-                  ElevatedButton.icon(
-                    onPressed: _removeImage,
-                    label: const Text(
-                      'Remove photo',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    icon: const Icon(Icons.delete_forever),
+                  Column(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: _removeImage,
+                        label: const Text(
+                          'Remove photo',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        icon: const Icon(
+                          Icons.delete_forever,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      FilledButton.icon(
+                        onPressed: (){},
+                        label: Padding(
+                          padding: const EdgeInsets.fromLTRB(10,0,10,0),
+                          child: const Text(
+                            'Submit',
+                            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+                          ),
+                        ),
+                        icon: const Icon(Icons.check),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(
+                            Color.fromARGB(255, 117, 170, 114),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
