@@ -5,10 +5,10 @@ from sklearn.preprocessing import LabelBinarizer
 from keras.preprocessing.image import img_to_array
 
 # Load the saved model
-model = load_model(r"C:\Users\jacks\OneDrive\Documents\farmapp\farmapp_env\myapp\cnn_model.h5")
+model = load_model(r"C:\Users\jacks\anaconda3\envs\farmapp_env\zera3ati\farmapp_env\myapp\cnn_model.h5")
 
 # Load the classes for the label binarizer
-classes_ = np.load(r"C:\Users\jacks\OneDrive\Documents\farmapp\farmapp_env\myapp\label_binarizer.npy")
+classes_ = np.load(r"C:\Users\jacks\anaconda3\envs\farmapp_env\zera3ati\farmapp_env\myapp\label_binarizer.npy")
 
 default_image_size = (256, 256)
 
