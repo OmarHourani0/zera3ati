@@ -99,7 +99,7 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
     setState(() {
       isLoading = true;
     });
-    Uri url = Uri.parse('http://127.0.0.1:8000/submit_img/');
+    Uri url = Uri.parse('http://192.168.1.16:8000/submit_img/');
     var request = http.MultipartRequest('POST', url);
     request.files.add(await http.MultipartFile.fromPath('image', image.path));
     // Print request details

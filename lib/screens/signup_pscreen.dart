@@ -23,7 +23,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> _signup() async {
-    final url = Uri.parse('http://127.0.0.1:8000/signup/');
+    final url = Uri.parse('http://192.168.1.16:8000/signup/');
     final body = json.encode({
       'id': _idNumber,
       'password': _password,

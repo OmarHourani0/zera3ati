@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   String _idNumber = '1234567890';
 
   Future<void> _login() async {
-    final url = Uri.parse('http://127.0.0.1:8000/login/');
+    final url = Uri.parse('http://192.168.1.16:8000/login/');
     final body = json.encode({
       'id': _idNumber,
       'password': _password,
