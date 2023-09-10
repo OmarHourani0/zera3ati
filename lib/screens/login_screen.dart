@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:zera3ati_app/screens/main_screen.dart';
 import 'package:zera3ati_app/screens/signup_pscreen.dart';
 
@@ -13,10 +15,33 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // ignore: unused_field
-  late final String _password;
-  // ignore: unused_field
-  late final String _idNumber;
+  String _password = 'Haha12345#';
+  String _idNumber = '1234567890';
+
+  Future<void> _login() async {
+    final url = Uri.parse('http://127.0.0.1:8000/login/');
+    final body = json.encode({
+      'id': _idNumber,
+      'password': _password,
+    });
+    print('Request body: $body');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      Get.to(const MainScreen());
+    } else {
+      // handle error based on the status code
+      // for example, show a message to the user
+      print('Error: ${response.statusCode} - ${response.body}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +56,15 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
-                const SizedBox(
-                  height: 10,
-                ),
+                // const SizedBox(
+                //   height: 16,
+                // ),
                 Image.asset(
-                  //'assets/IMG_9186.PNG',
                   'assets/logo3.png',
                   scale: 5,
                 ),
                 const SizedBox(
-                  height: 22,
+                  height: 18,
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
@@ -49,11 +73,10 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
+                  initialValue: _idNumber,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your ID number';
-                    } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                      return 'ID number should only contain digits (0-9)';
                     } else if (value.length != 10) {
                       return 'ID number must be 10 digits long';
                     }
@@ -72,14 +95,10 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(),
                   ),
                   obscureText: true,
+                  initialValue: _password,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your password';
-                    } else if (!RegExp(r'^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$')
-                        .hasMatch(value)) {
-                      return 'Password must contain at least one capital letter and one number';
-                    } else if (value.length < 6) {
-                      return 'Password length should be at least 6 characters long';
                     }
                     return null;
                   },
@@ -91,47 +110,24 @@ class _LoginPageState extends State<LoginPage> {
                 // const SizedBox(
                 //   height: 16,
                 // ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            Get.to(const MainScreen());
-                          }
-                        },
-                        style: const ButtonStyle(
-                            foregroundColor:
-                                MaterialStatePropertyAll(Colors.white),
-                            backgroundColor: MaterialStatePropertyAll(
-                                Color.fromARGB(255, 92, 0, 0))),
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        _login();
+                      }
+                    },
+                    style: const ButtonStyle(
+                        foregroundColor: MaterialStatePropertyAll(Colors.white),
+                        backgroundColor: MaterialStatePropertyAll(
+                            Color.fromARGB(255, 92, 0, 0))),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
-                    //SizedBox(width: 70),
-                    // Column(
-                    //   children: [
-                    //     SizedBox(height: 30),
-                    //     TextButton(
-                    //       onPressed: () {
-                    //         Get.to(SignupPage());
-                    //       },
-                    //       child: Text(
-                    //         'Dont have an account yet?',
-                    //         style: TextStyle(
-                    //           color: Colors.grey,
-                    //           decoration: TextDecoration.underline,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,12 +147,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
-                // SingleChildScrollView(
-                //   child: Lottie.asset(
-                //     'assets/images/test.json',
-                //   ),
-                // ),
               ],
             ),
           ),

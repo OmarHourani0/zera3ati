@@ -59,7 +59,6 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: "^0.13.1"
   build_runner:
-  flutter_gen_runner:
 
 flutter_launcher_icons:
   #image_path: "assets/IMG_9186.PNG"
@@ -95,7 +94,6 @@ flutter:
     - assets/background1.jpg
     - assets/background_dark.jpg
     - assets/drawer_dark.jpg
-    - /Users/Omar/Alternate_Desktop/Flutter_projects/zera3ati_app/assets/images/lottie/test.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

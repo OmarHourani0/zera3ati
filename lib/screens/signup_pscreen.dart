@@ -1,3 +1,5 @@
+import 'dart:convert'; // Import for JSON operations
+import 'package:http/http.dart' as http; // Import for HTTP operations
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zera3ati_app/screens/main_screen.dart';
@@ -13,27 +15,34 @@ class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
 
   String? _password;
-  // ignore: unused_field
   String? _idNumber;
   String? _confirm;
 
   bool passwordcheck() {
-    setState(() {
-      if (_password == _confirm || (_password!.length != _confirm!.length)) {
-        const SnackBar(
-          content: Center(
-            child: Text(
-              "You passwords dont match, please try again.",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        );
-      }
+    return _password == _confirm;
+  }
+
+  Future<void> _signup() async {
+    final url = Uri.parse('http://127.0.0.1:8000/signup/');
+    final body = json.encode({
+      'id': _idNumber,
+      'password': _password,
     });
-    return false;
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      Get.to(const MainScreen());
+    } else {
+      // Handle error based on the status code
+      Get.snackbar('Error', 'Signup failed: ${response.body}');
+    }
   }
 
   @override
@@ -49,9 +58,6 @@ class _SignupPageState extends State<SignupPage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
-                // const SizedBox(
-                //   height: 16,
-                // ),
                 Image.asset(
                   'assets/logo3.png',
                   scale: 5,
@@ -79,8 +85,6 @@ class _SignupPageState extends State<SignupPage> {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your ID number';
-                    } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                      return 'ID number should only contain digits (0-9)';
                     } else if (value.length != 10) {
                       return 'ID number must be 10 digits long';
                     }
@@ -95,16 +99,13 @@ class _SignupPageState extends State<SignupPage> {
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Password',
-                    hintText: "Enter your pasword",
+                    hintText: "Enter your password",
                     border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your password';
-                    } else if (!RegExp(r'^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$')
-                        .hasMatch(value)) {
-                      return 'Password must contain at least one capital letter and one number';
                     } else if (value.length < 6) {
                       return 'Password length should be at least 6 characters long';
                     }
@@ -119,15 +120,15 @@ class _SignupPageState extends State<SignupPage> {
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Confirm password',
-                    hintText: "Enter your pasword again",
+                    hintText: "Enter your password again",
                     border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your password again';
-                    } else if (passwordcheck() == true) {
-                      return 'Your passwords dont match. Please try again nigga';
+                    } else if (!passwordcheck()) {
+                      return 'Your passwords don\'t match. Please try again.';
                     }
                     return null;
                   },
@@ -136,15 +137,13 @@ class _SignupPageState extends State<SignupPage> {
                   },
                   style: const TextStyle(color: Colors.white),
                 ),
-                // const SizedBox(
-                //   height: 16,
-                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Get.to(const MainScreen());
+                        _formKey.currentState!.save(); // Save the form data
+                        _signup(); // Call the signup function
                       }
                     },
                     style: const ButtonStyle(
@@ -158,11 +157,6 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
                 SizedBox(height: 30),
-                // SingleChildScrollView(
-                //   child: Lottie.asset(
-                //     'assets/images/test.json',
-                //   ),
-                // ),
               ],
             ),
           ),

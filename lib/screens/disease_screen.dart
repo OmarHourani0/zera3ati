@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DiseaseDetectionScreen extends StatefulWidget {
   const DiseaseDetectionScreen({Key? key}) : super(key: key);
@@ -11,10 +13,26 @@ class DiseaseDetectionScreen extends StatefulWidget {
   }
 }
 
+String? prediction = "";
+String? treatment = "";
+String? title = 'Your analysis will be shown below:';
+
+void parseResponse(responseBody) {
+  var parsedResponse = jsonDecode(responseBody);
+
+  prediction = parsedResponse['prediction'];
+  treatment = parsedResponse['treatment'];
+  prediction = prediction!.replaceAll('_', ' ');
+  title = 'Lets take a look at the problem...';
+
+  print('Prediction: $prediction');
+  print('Treatment: $treatment');
+}
+
 class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
   String selectedCrop = 'Tomato';
   String newValuee = 'boo';
-
+  bool isLoading = false; // Add this line
   final List<String> crops = [
     'Tomato',
     'Cucumber',
@@ -70,8 +88,56 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
 
   void _removeImage() {
     setState(() {
+      prediction = '';
+      treatment = '';
+      title = 'Your analysis will be shown below:';
       _selectedImage = null;
     });
+  }
+
+  Future<void> _submitImage(File image) async {
+    setState(() {
+      isLoading = true;
+    });
+    Uri url = Uri.parse('http://127.0.0.1:8000/submit_img/');
+    var request = http.MultipartRequest('POST', url);
+    request.files.add(await http.MultipartFile.fromPath('image', image.path));
+    // Print request details
+    print("Request URL: ${request.url}");
+    print("Request Method: ${request.method}");
+    print("Request Headers: ${request.headers}");
+    // Center(
+    //   child: CircularProgressIndicator(),
+    // );
+    // Convert the image to Base64 and print
+    String base64Image = base64Encode(image.readAsBytesSync());
+    print("Request Body (Image in Base64): $base64Image");
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+// stop the loading sequence
+      print('Image uploaded successfully!');
+      setState(() {
+        isLoading = false;
+        String? prediction = "";
+        String? treatment = "";
+        String? title = 'Lets take a look at the problem...';
+      });
+
+      String responseBody = await response.stream.bytesToString();
+      parseResponse(responseBody);
+    } else {
+      //stop the loading and
+      setState(() {
+        isLoading = false;
+        String? prediction = "";
+        String? treatment = "";
+        String? title = 'Error: try again later. Check Connection';
+      });
+
+      print('Image upload failed.');
+    }
   }
 
   @override
@@ -237,12 +303,18 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
                       ),
                       SizedBox(height: 8),
                       FilledButton.icon(
-                        onPressed: (){},
+                        onPressed: () {
+                          if (_selectedImage != null) {
+                            _submitImage(_selectedImage!);
+                          }
+                        },
                         label: Padding(
-                          padding: const EdgeInsets.fromLTRB(10,0,10,0),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: const Text(
                             'Submit',
-                            style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 20),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 20),
                           ),
                         ),
                         icon: const Icon(Icons.check),
@@ -291,38 +363,42 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
                     ),
                     padding:
                         const EdgeInsets.all(16), // Add padding inside the box
-                    child: const SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '//Dynamic title based on plant condition (Either eno its good or diseased)',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                    child: isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  key: ValueKey(
+                                      'fld1'), // This is the identifier
+                                  title!,
+                                  style: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  //key: ValueKey('fld2'), // This is the identifier
+                                  prediction!,
+                                  style: TextStyle(
+                                    fontSize: 35,
+                                    color: Color.fromARGB(255, 188, 18, 18),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  treatment!,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 10),
-                          Text(
-                            //make Zaina or Hammad add
-                            'You guys will add personalised text here based on the plant\'s condition',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'More content...\nYall are gay.\n\n\n\n\nAnd text here too.',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
                 ],
               ),
