@@ -35,3 +35,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 class ImageUploadSerializer(serializers.Serializer):
     image = serializers.ImageField()
+
+class generateuidAgora(serializers.Serializer):
+    channelName = serializers.CharField(max_length=100)
+    uid = serializers.IntegerField()

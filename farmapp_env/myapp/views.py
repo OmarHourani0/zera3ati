@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .models import CustomUser
+from .models import CustomUser, Treatment, Assistant
 from .serializers import CustomUserSerializer, ImageUploadSerializer
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
@@ -9,14 +9,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.core.files.uploadedfile import InMemoryUploadedFile
-import os
 import json
 from .ai_module import predict_class
 from PIL import Image
 import openai as gpt
 from django.core.cache import cache
 import os
-from .models import Treatment
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 
 def transform_prediction(data):
@@ -53,7 +54,8 @@ def user_view(request):
             auth_user = authenticate(id=idR, password=password)
             if auth_user:
                 # User exists and password is correct
-                return Response({"message": "Logged in successfully!"}, status=status.HTTP_200_OK)
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({"message": "Logged in successfully!", "token": token.key}, status=status.HTTP_200_OK)
             else:
                 # Password is incorrect
                 return Response({"error": "Invalid password."}, status=status.HTTP_400_BAD_REQUEST)
@@ -62,7 +64,8 @@ def user_view(request):
             serializer = CustomUserSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                token, created = Token.objects.get_or_create(user=serializer.instance)
+                return Response({"message": "User created successfully!", "token": token.key}, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -84,7 +87,8 @@ def login_view(request):
         auth_user = authenticate(id=idR, password=password)
         if auth_user:
             # User exists and password is correct
-            return Response({"message": "Logged in successfully!"}, status=status.HTTP_200_OK)
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({"message": "Logged in successfully!", "token": token.key}, status=status.HTTP_200_OK)
         else:
             # Password is incorrect
             return Response({"error": "Invalid password."}, status=status.HTTP_400_BAD_REQUEST)
@@ -109,7 +113,8 @@ def signup_view(request):
         serializer = CustomUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            token, created = Token.objects.get_or_create(user=serializer.instance)
+            return Response({"message": "User created successfully!", "token": token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
@@ -135,8 +140,8 @@ def user_login_or_register(request):
         auth_user = authenticate(id=idR, password=password)
         if auth_user:
             # User exists and password is correct
-            # You can return a token or any other response here
-            return Response({"message": "Logged in successfully!"}, status=status.HTTP_200_OK)
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({"message": "Logged in successfully!", "token": token.key}, status=status.HTTP_200_OK)
         else:
             # Password is incorrect
             return Response({"error": "Invalid password."}, status=status.HTTP_400_BAD_REQUEST)
@@ -145,13 +150,17 @@ def user_login_or_register(request):
         serializer = CustomUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            token, created = Token.objects.get_or_create(user=serializer.instance)
+            return Response({"message": "User created successfully!", "token": token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 @api_view(['POST'])
 def run_ai(request):
     if request.method == 'POST':
+        token = request.META.get('HTTP_AUTHORIZATION').split()[1]
+        user = Token.objects.get(key=token).user
+
         serializer = ImageUploadSerializer(data=request.data)
         
         if serializer.is_valid():
@@ -216,3 +225,78 @@ def run_ai(request):
             return JsonResponse(final_response)
         else:
             return JsonResponse(serializer.errors, status=400)
+
+
+@csrf_exempt
+@api_view(['POST'])
+def login_view_assistant(request):
+    if request.method == 'POST':
+        idR = request.data.get('id')
+        password = request.data.get('password')
+        name = request.data.get('name')
+
+        # Check if user with the given ID exists
+        try:
+            user = CustomUser.objects.get(id=idR)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "User does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Authenticate user
+        auth_user = authenticate(id=idR, password=password)
+        if auth_user:
+            # User exists and password is correct
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({"message": "Logged in successfully!", "token": token.key}, status=status.HTTP_200_OK)
+        else:
+            # Password is incorrect
+            return Response({"error": "Invalid password."}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def signup_view_assistant(request):
+    if request.method == 'POST':
+        idR = request.data.get('id')
+        name = request.data.get('name')
+
+        # Check if user with the given ID already exists
+        try:
+            user = CustomUser.objects.get(id=idR)
+            return Response({"error": "User with this ID already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        except CustomUser.DoesNotExist:
+            pass
+
+        # Create a new user
+        serializer = CustomUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            token, created = Token.objects.get_or_create(user=serializer.instance)
+            return Response({"message": "User created successfully!", "token": token.key}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure the user is authenticated
+def Call_Assistant(request):
+    user_id = request.data.get('user_id')
+    assistant_name = request.data.get('assistant_name')
+
+    # Verify the user ID
+    try:
+        user = CustomUser.objects.get(id=user_id)
+    except CustomUser.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    # Verify the assistant name
+    try:
+        assistant = Assistant.objects.get(name=assistant_name)
+    except Assistant.DoesNotExist:
+        return JsonResponse({'error': 'Assistant not found'}, status=404)
+
+    # Return the ID of the assistant
+    return JsonResponse({'assistant_id': assistant.id})

@@ -3,6 +3,8 @@ from django.contrib.auth.models import Group, Permission
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 import re
 from PIL import Image
 
@@ -11,7 +13,8 @@ class Treatment(models.Model):
     prompt = models.TextField(unique=True)
     response = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, id, password=None, **extra_fields):
@@ -75,3 +78,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return str(self.id)
+
+
+class Assistant(CustomUser):
+    # If you want to add any additional fields specific to the assistant, you can add them here.
+    # For example:
+    name = models.CharField(max_length=100)
+    pass
