@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from myapp.views import CustomUserList, user_view, user_login_or_register, login_view, signup_view, run_ai, login_view_assistant, signup_view_assistant
+from myapp.views import CustomUserList, user_view, user_login_or_register, login_view, signup_view, run_ai, login_view_assistant, signup_view_assistant, Call_Assistant
 
 urlpatterns = [
     path('login/', login_view, name='login_view'),
@@ -10,6 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('assistant_login/', login_view_assistant, name='login_view_assistant'),
     path('assistant_signup/', signup_view_assistant, name='signup_view_assistant'),
+    path('call_assistant/', Call_Assistant, name='Call_Assistant'),
     
 
 

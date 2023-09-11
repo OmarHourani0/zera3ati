@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser
+from .models import CustomUser, Assistant
 import re
 from PIL import Image
 
@@ -39,3 +39,9 @@ class ImageUploadSerializer(serializers.Serializer):
 class generateuidAgora(serializers.Serializer):
     channelName = serializers.CharField(max_length=100)
     uid = serializers.IntegerField()
+
+
+class AssistantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assistant
+        fields = '__all__'

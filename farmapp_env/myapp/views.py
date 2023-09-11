@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from .models import CustomUser, Treatment, Assistant
-from .serializers import CustomUserSerializer, ImageUploadSerializer
+from .serializers import CustomUserSerializer, ImageUploadSerializer, AssistantSerializer
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -256,7 +256,6 @@ def login_view_assistant(request):
 
 @csrf_exempt
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def signup_view_assistant(request):
     if request.method == 'POST':
         idR = request.data.get('id')
@@ -264,17 +263,17 @@ def signup_view_assistant(request):
 
         # Check if user with the given ID already exists
         try:
-            user = CustomUser.objects.get(id=idR)
-            return Response({"error": "User with this ID already exists."}, status=status.HTTP_400_BAD_REQUEST)
-        except CustomUser.DoesNotExist:
+            user = Assistant.objects.get(id=idR)
+            return Response({"error": "Assistant with this ID already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        except Assistant.DoesNotExist:
             pass
 
-        # Create a new user
-        serializer = CustomUserSerializer(data=request.data)
+        # Create a new assistant
+        serializer = AssistantSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             token, created = Token.objects.get_or_create(user=serializer.instance)
-            return Response({"message": "User created successfully!", "token": token.key}, status=status.HTTP_201_CREATED)
+            return Response({"message": "Assistant created successfully!", "token": token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({"error": "Invalid request method."}, status=status.HTTP_400_BAD_REQUEST)
