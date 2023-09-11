@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import json
-from .ai_module import predict_class
+from .ai_module import predict_class, predict_crop
 from PIL import Image
 import openai as gpt
 from django.core.cache import cache
@@ -226,6 +226,31 @@ def run_ai(request):
         else:
             return JsonResponse(serializer.errors, status=400)
 
+@csrf_exempt
+@api_view(['POST'])
+def run_crop_ai(request):
+    if request.method == 'POST':
+        # token = request.META.get('HTTP_AUTHORIZATION').split()[1]
+        # user = Token.objects.get(key=token).user
+
+        N = request.data.get('N')
+        P = request.data.get('P')
+        K = request.data.get('K')
+        temperature = request.data.get('temperature')
+        humidity = request.data.get('humidity')
+        ph = request.data.get('ph')
+        rainfall = request.data.get('rainfall')
+
+        # Get prediction using AI function
+        predicted_crop = predict_crop(N, P, K, temperature, humidity, ph, rainfall)
+
+        # Transform the prediction
+        data = {
+            'prediction': predicted_crop
+        }
+        data["prediction"] = transform_prediction(data)["prediction"]
+
+        return JsonResponse(data)
 
 @csrf_exempt
 @api_view(['POST'])
