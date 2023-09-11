@@ -8,7 +8,16 @@ import 'package:zera3ati_app/widgets/farming_page_grid.dart';
 import 'package:get/get.dart';
 
 class FarmingScreen extends StatefulWidget {
-  const FarmingScreen({super.key});
+  const FarmingScreen(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId})
+      : super(key: key);
+
+  final String id;
+  final String token;
+  final int assistantId;
 
   @override
   State<FarmingScreen> createState() {
@@ -23,15 +32,27 @@ class _FarmingScreen extends State<FarmingScreen> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 0) {
-        Get.to(const MainScreen());
+        Get.to(MainScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       if (_selectedIndex == 2) {
-        Get.to(WeatherScreen());
+        Get.to(WeatherScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       if (_selectedIndex == 3) {
-        Get.to(const MarketScreen());
+        Get.to(MarketScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
     });
@@ -94,10 +115,16 @@ class _FarmingScreen extends State<FarmingScreen> {
                       ];
                       final List<VoidCallback> functionList = [
                         () {
-                          Get.to(const NutrientScreen());
+                          Get.to(NutrientScreen(
+                            id: widget.id,
+                            token: widget.token,
+                          ));
                         },
                         () {
-                          Get.to(const DiseaseDetectionScreen());
+                          Get.to(DiseaseDetectionScreen(
+                            id: widget.id,
+                            token: widget.token,
+                          ));
                         },
                       ];
                       return FarmingGridItem(

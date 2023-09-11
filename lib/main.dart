@@ -15,11 +15,10 @@ final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
     brightness: Brightness.dark,
-    seedColor: const Color.fromARGB(255, 4, 111, 0),    
+    seedColor: const Color.fromARGB(255, 4, 111, 0),
   ),
   textTheme: GoogleFonts.latoTextTheme(),
 );
-
 
 //        CHATGPT CODES (they suck ass and we dont have a theme yet)...
 
@@ -129,25 +128,17 @@ final theme = ThemeData(
 //         ));
 //.............................................................................................................
 
-
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]).then(
-    (fn) {
-      runApp(
-        const ProviderScope(
-          child: App(),
-        ),
-      );
-    },
-  );
-}
-
 class App extends StatefulWidget {
-  const App({super.key});
+  const App(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId})
+      : super(key: key);
 
+  final String id;
+  final String token;
+  final int assistantId;
   @override
   State<App> createState() {
     return _App();
@@ -159,44 +150,67 @@ class _App extends State<App> {
   Widget build(BuildContext context) {
     //final isIOS = Platform.isIOS;
     return GetMaterialApp(
-      theme: theme,      
+      theme: theme,
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: LoginPage(
+        id: widget.id,
+        token: widget.token,
+        assistantId: widget.assistantId,
+      ),
     );
   }
 }
-    // return isIOS
-    //     ? CupertinoApp( // Use CupertinoApp for iOS
-    //         debugShowCheckedModeBanner: false,
-    //         theme: CupertinoThemeData(
-    //           primaryColor: CupertinoColors.activeBlue,
-    //           // Customize the Cupertino theme as needed
-    //         ),
-    //         home: LoginPage(),
-    //       )
-    //     : GetMaterialApp( // Use GetMaterialApp for other platforms
-    //         debugShowCheckedModeBanner: false,
-    //         theme: theme,
-    //         home: LoginPage(),
-    //       );
-    // return AdaptiveTheme(
-    //   light: ThemeData(
-    //     brightness: Brightness.light,
-    //     primarySwatch: Colors.lightGreen,
-    //     hintColor: Colors.amber,
-    //   ),
-    //   dark: ThemeData(
-    //     brightness: Brightness.dark,
-    //     primarySwatch: Colors.lightGreen,
-    //     hintColor: Colors.green,
-    //   ),
-    //   initial: AdaptiveThemeMode.dark,
-    //   builder: (theme, darkTheme) => MaterialApp(
-    //     title: 'Adaptive Theme Demo',
-    //     theme: theme,
-    //     darkTheme: darkTheme,
-    //     home: LoginPage(),
-    //   ),
-    // );
+// return isIOS
+//     ? CupertinoApp( // Use CupertinoApp for iOS
+//         debugShowCheckedModeBanner: false,
+//         theme: CupertinoThemeData(
+//           primaryColor: CupertinoColors.activeBlue,
+//           // Customize the Cupertino theme as needed
+//         ),
+//         home: LoginPage(),
+//       )
+//     : GetMaterialApp( // Use GetMaterialApp for other platforms
+//         debugShowCheckedModeBanner: false,
+//         theme: theme,
+//         home: LoginPage(),
+//       );
+// return AdaptiveTheme(
+//   light: ThemeData(
+//     brightness: Brightness.light,
+//     primarySwatch: Colors.lightGreen,
+//     hintColor: Colors.amber,
+//   ),
+//   dark: ThemeData(
+//     brightness: Brightness.dark,
+//     primarySwatch: Colors.lightGreen,
+//     hintColor: Colors.green,
+//   ),
+//   initial: AdaptiveThemeMode.dark,
+//   builder: (theme, darkTheme) => MaterialApp(
+//     title: 'Adaptive Theme Demo',
+//     theme: theme,
+//     darkTheme: darkTheme,
+//     home: LoginPage(),
+//   ),
+// );
 //   }
 // }
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]).then(
+    (fn) {
+      runApp(
+        ProviderScope(
+          child: App(
+            id: '',
+            token: '',
+            assistantId: 1,
+          ),
+        ),
+      );
+    },
+  );
+}

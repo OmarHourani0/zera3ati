@@ -8,7 +8,17 @@ import 'package:zera3ati_app/screens/weather_screen.dart';
 class navigationBar extends StatefulWidget {
   final int page;
 
-  navigationBar({super.key, required this.page});
+  const navigationBar(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId,
+      required this.page})
+      : super(key: key);
+
+  final String id;
+  final String token;
+  final int assistantId;
 
   // final int page;
 
@@ -25,26 +35,41 @@ class _navigationBar extends State<navigationBar> {
   void initState() {
     super.initState();
     _selectedIndex = widget.page;
-    
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index; // Update the selected index
       if (_selectedIndex == 0) {
-        Get.to(const MainScreen());
+        Get.to(MainScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       if (_selectedIndex == 1) {
-        Get.to(const FarmingScreen());
+        Get.to(FarmingScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       if (_selectedIndex == 2) {
-        Get.to(WeatherScreen());
+        Get.to(WeatherScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       if (_selectedIndex == 3) {
-        Get.to(const MarketScreen());
+        Get.to(MarketScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       //_selectedIndex = index;

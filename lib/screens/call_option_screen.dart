@@ -1,93 +1,34 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:zera3ati_app/screens/call_screen.dart';
-
-// class CallOption extends StatefulWidget {
-//   const CallOption({super.key});
-
-//   @override
-//   State<CallOption> createState() => _CallOptionState();
-// }
-
-// class _CallOptionState extends State<CallOption> {
-//   final List<Map<String, String>> data = [
-//     {"name": "John", "specialization": "Crop Farming"},
-//     {"name": "Alice", "specialization": "Livestock Farming"},
-//     {"name": "Bob", "specialization": "Organic Farming"},
-//     {"name": "John", "specialization": "Crop Farming"},
-//     {"name": "Alice", "specialization": "Livestock Farming"},
-//     {"name": "Bob", "specialization": "Organic Farming"},
-
-//     // Add more data items as needed
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-
-//     double _getModalHeight(BuildContext context) {
-//     // Calculate height based on the screen height
-//     // For instance, use 80% of the screen height
-//     double screenHeight = MediaQuery.of(context).size.height;
-//     return screenHeight * 0.8;
-//   }
-
-//     double listViewHeight = _getModalHeight(context);
-
-//     return Container(
-//       child: Column(
-//         mainAxisSize: MainAxisSize.min,
-//         children: <Widget>[
-//           Text(
-//             'Here are the people you can call',
-//             style: TextStyle(
-//               color: Colors.white,
-//               fontSize: 24,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//           ListTile(
-//             title: Text(
-//               'Agricultural Specialists:',
-//               style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
-//             ),
-//           ),
-//           Container(
-//             height: MediaQuery.of(context).size.height * 0.7,
-//             child: ListView.builder(
-//               shrinkWrap: true,
-//               itemCount: data.length,
-//               itemBuilder: (BuildContext context, int index) {
-//                 final item = data[index];
-//                 return GestureDetector(
-//                   onTap: () {
-//                     Get.to(CallScreen());
-//                   },
-//                   child: Card(
-//                     child: ListTile(
-//                       title: Text(item['name'] ?? ''),
-//                       subtitle: Text(item['specialization'] ?? ''),
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zera3ati_app/screens/call_screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'call_screen.dart';
 
 class CallOption extends StatefulWidget {
-  const CallOption({super.key});
+  const CallOption(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId})
+      : super(key: key);
+
+  final String id;
+  final String token;
+  final int assistantId;
 
   @override
   State<CallOption> createState() => _CallOptionState();
 }
+
+// String TokenGetter() {
+//   return token
+//       .value; // Assuming token is a RxString or similar reactive variable
+// }
+
+// String IdGetter() {
+//   return id.value;
+// }
 
 class _CallOptionState extends State<CallOption> {
   final List<Map<String, String>> data = [
@@ -97,13 +38,42 @@ class _CallOptionState extends State<CallOption> {
     {"name": "John", "specialization": "Crop Farming"},
     {"name": "Alice", "specialization": "Livestock Farming"},
     {"name": "Bob", "specialization": "Organic Farming"},
-
-    // Add more data items as needed
   ];
 
   double _getModalHeight(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return screenHeight * 0.45;
+  }
+
+  Future<Map<String, dynamic>> callAssistant(
+      String userId, String assistantName) async {
+    final url = 'http://127.0.0.1:8000/call_assistant/';
+    final requestBody = {
+      'user_id': userId,
+      'assistant_name': assistantName,
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token ${widget.token}',
+    };
+
+    // Print the request body and headers before sending the request
+    print('Request Headers: $headers');
+    print('Request Body: ${json.encode(requestBody)}');
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: json.encode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      return responseData; // <-- This returns the entire Map<String, dynamic>
+    } else {
+      throw Exception('Failed to load assistant');
+    }
   }
 
   @override
@@ -137,8 +107,20 @@ class _CallOptionState extends State<CallOption> {
                   itemBuilder: (BuildContext context, int index) {
                     final item = data[index];
                     return GestureDetector(
-                      onTap: () {
-                        Get.to(CallScreen());
+                      onTap: () async {
+                        try {
+                          final result =
+                              await callAssistant(widget.id, item['name']!);
+                          print(result['assistant_id']);
+                          Get.to(CallScreen(
+                            id: widget.id,
+                            token: widget.token,
+                            assistantId: widget.assistantId,
+                          ));
+                        } catch (error) {
+                          print(error);
+                          // Handle the error appropriately
+                        }
                       },
                       child: Card(
                         child: ListTile(

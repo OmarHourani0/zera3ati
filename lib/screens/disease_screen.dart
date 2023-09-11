@@ -5,13 +5,21 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class DiseaseDetectionScreen extends StatefulWidget {
-  const DiseaseDetectionScreen({Key? key}) : super(key: key);
+  const DiseaseDetectionScreen(
+      {Key? key, required this.id, required this.token})
+      : super(key: key);
 
+  final String id;
+  final String token;
   @override
   State<DiseaseDetectionScreen> createState() {
     return _DiseaseDetectionScreen();
   }
 }
+
+// String TokenGetter() {
+//   return token.value;
+// }
 
 String? prediction = "";
 String? treatment = "";
@@ -99,7 +107,7 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
     setState(() {
       isLoading = true;
     });
-    Uri url = Uri.parse('http://192.168.1.16:8000/submit_img/');
+    Uri url = Uri.parse('http://127.0.0.1:8000/submit_img/');
     var request = http.MultipartRequest('POST', url);
     request.files.add(await http.MultipartFile.fromPath('image', image.path));
     // Print request details

@@ -2,13 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:zera3ati_app/widgets/nutrients_input.dart';
 
 class NutrientScreen extends StatefulWidget {
-  const NutrientScreen({super.key});
+  const NutrientScreen({Key? key, required this.id, required this.token})
+      : super(key: key);
+
+  final String id;
+  final String token;
 
   @override
   State<StatefulWidget> createState() {
     return _NutrientScreen();
   }
 }
+
+// String TokenGetter() {
+//   return token.value;
+// }
+
+// String IdGetter() {
+//   return id.value;
+// }
 
 class _NutrientScreen extends State<NutrientScreen> {
   String selectedCrop = 'Tomato';
@@ -106,7 +118,7 @@ class _NutrientScreen extends State<NutrientScreen> {
                         });
                       },
                       autofocus: false,
-                      hint: Text('data'),                      
+                      hint: Text('data'),
                       iconEnabledColor: Colors.grey,
                       borderRadius: BorderRadius.circular(20),
                       elevation: 10,
@@ -146,7 +158,7 @@ class _NutrientScreen extends State<NutrientScreen> {
                         });
                       },
                       autofocus: false,
-                      hint: Text('data'),  
+                      hint: Text('data'),
                       iconEnabledColor: Colors.grey,
                       borderRadius: BorderRadius.circular(20),
                       elevation: 10,

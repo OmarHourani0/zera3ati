@@ -7,7 +7,16 @@ import 'package:zera3ati_app/screens/weather_screen.dart';
 import 'package:zera3ati_app/widgets/market_page_widget.dart';
 
 class MarketScreen extends StatefulWidget {
-  const MarketScreen({super.key});
+  const MarketScreen(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId})
+      : super(key: key);
+
+  final String id;
+  final String token;
+  final int assistantId;
 
 //   @override
 //   State<MarketScreen> createState(){
@@ -33,19 +42,35 @@ class _MarketScreen extends State<MarketScreen> {
     setState(() {
       _selectedIndex = index; // Update the selected index
       if (_selectedIndex == 0) {
-        Get.to(const MainScreen());
+        Get.to(MainScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       if (_selectedIndex == 1) {
-        Get.to(const FarmingScreen());
+        Get.to(FarmingScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       if (_selectedIndex == 2) {
-        Get.to(WeatherScreen());
+        Get.to(WeatherScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
       if (_selectedIndex == 3) {
-        Get.to(const MarketScreen());
+        Get.to(MarketScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
         _selectedIndex = index;
       }
     });
@@ -60,10 +85,10 @@ class _MarketScreen extends State<MarketScreen> {
       ),
       body: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/background_dark.jpg'),
-                fit: BoxFit.cover),
-          ),
+          image: DecorationImage(
+              image: AssetImage('assets/background_dark.jpg'),
+              fit: BoxFit.cover),
+        ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,7 +96,7 @@ class _MarketScreen extends State<MarketScreen> {
             children: [
               //const SizedBox(height: 60),
               Padding(
-                padding: const EdgeInsets.fromLTRB(40,30,20,60),
+                padding: const EdgeInsets.fromLTRB(40, 30, 20, 60),
                 child: SizedBox(
                   //width: 350,
                   child: Text(

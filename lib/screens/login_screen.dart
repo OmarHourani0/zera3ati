@@ -6,7 +6,16 @@ import 'package:zera3ati_app/screens/main_screen.dart';
 import 'package:zera3ati_app/screens/signup_pscreen.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId})
+      : super(key: key);
+
+  final String id;
+  final String token;
+  final int assistantId;
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -19,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   String _idNumber = '1234567890';
 
   Future<void> _login() async {
-    final url = Uri.parse('http://192.168.1.16:8000/login/');
+    final url = Uri.parse('http://127.0.0.1:8000/login/');
     final body = json.encode({
       'id': _idNumber,
       'password': _password,
@@ -35,7 +44,13 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      Get.to(const MainScreen());
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final String token = responseData['token'];
+      Get.to(MainScreen(
+        id: _idNumber,
+        token: token,
+        assistantId: widget.assistantId,
+      ));
     } else {
       // handle error based on the status code
       // for example, show a message to the user
@@ -135,7 +150,11 @@ class _LoginPageState extends State<LoginPage> {
                     //SizedBox(height: 30),
                     TextButton(
                       onPressed: () {
-                        Get.to(SignupPage());
+                        Get.to(SignupPage(
+                          id: widget.id,
+                          token: widget.token,
+                          assistantId: widget.assistantId,
+                        ));
                       },
                       child: Text(
                         'Dont have an account yet?',

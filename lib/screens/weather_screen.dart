@@ -9,7 +9,15 @@ import 'package:zera3ati_app/screens/market_screen.dart';
 class WeatherScreen extends StatelessWidget {
   final weatherController = Get.put(WeatherController());
 
-  WeatherScreen({super.key});
+  WeatherScreen(
+      {super.key,
+      required this.id,
+      required this.token,
+      required this.assistantId});
+
+  final String id;
+  final String token;
+  final int assistantId;
 
 //    List<Widget> destinations = [
 //   MainScreen(),
@@ -23,15 +31,27 @@ class WeatherScreen extends StatelessWidget {
   void _onItemTapped(int index) {
     _selectedIndex = index;
     if (_selectedIndex == 0) {
-      Get.to(const MainScreen());
+      Get.to(MainScreen(
+        id: id,
+        token: token,
+        assistantId: assistantId,
+      ));
       _selectedIndex = index;
     }
     if (_selectedIndex == 1) {
-      Get.to(const FarmingScreen());
+      Get.to(FarmingScreen(
+        id: id,
+        token: token,
+        assistantId: assistantId,
+      ));
       _selectedIndex = index;
     }
     if (_selectedIndex == 3) {
-      Get.to(const MarketScreen());
+      Get.to(MarketScreen(
+        id: id,
+        token: token,
+        assistantId: assistantId,
+      ));
       _selectedIndex = index;
     }
   }
@@ -100,8 +120,8 @@ class WeatherScreen extends StatelessWidget {
                                   .toUpperCase(),
                               style: const TextStyle(
                                 fontSize: 30,
-                                color: Colors.white,                                
-                              ),                              
+                                color: Colors.white,
+                              ),
                             ),
                             const SizedBox(height: 4),
                             Text(

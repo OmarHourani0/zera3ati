@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
@@ -9,7 +10,16 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 const String appId = '7b3cd04a567540fdab2dccc136b7c628';
 
 class CallScreen extends StatefulWidget {
-  const CallScreen({super.key});
+  const CallScreen(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId})
+      : super(key: key);
+
+  final String id;
+  final String token;
+  final int assistantId;
 
   @override
   State<CallScreen> createState() => _CallScreenState();
@@ -17,14 +27,22 @@ class CallScreen extends StatefulWidget {
 
 class _CallScreenState extends State<CallScreen> {
   String channelName = "CallToken";
-  String token =
+  String tempToken =
       "007eJxTYPDql0o8ohKUdi4mpfORh2zqelmjd3fyTjY0LVnhttT74FcFBvMk4+QUA5NEUzNzUxODtJTEJKOU5ORkQ2OzJPNkMyOLrC1/UxoCGRlMSkqYGRkgEMTnZHBOzMkJyc9OzWNgAAAPNyIS";
 
-  int uid = 1; // uid of the local user
+  int uid = 2; // uid of the local user
+
+  // String TokenGetter() {
+  //   return token.value;
+  // }
+
+  // String IdGetter() {
+  //   return id.value;
+  // }
 
   late Future<void> _engineInitialization;
 
-  int? _remoteUid = 2; // uid of the remote user
+  int? _remoteUid;
   bool _isJoined = false; // Indicates if the local user has joined the channel
   late RtcEngine agoraEngine; // Agora engine instance
 
@@ -292,6 +310,7 @@ class _CallScreenState extends State<CallScreen> {
   void initState() {
     super.initState();
     // Initialize Agora engine
+    _remoteUid = widget.assistantId;
     _engineInitialization = initializeAgoraEngine();
   }
 
@@ -351,7 +370,7 @@ class _CallScreenState extends State<CallScreen> {
     );
 
     await agoraEngine.joinChannel(
-      token: token,
+      token: tempToken,
       channelId: channelName,
       options: options,
       uid: uid,

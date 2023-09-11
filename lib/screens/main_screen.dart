@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:zera3ati_app/screens/call_option_screen.dart';
-import 'package:zera3ati_app/screens/call_screen.dart';
 import 'package:zera3ati_app/screens/farming_screen.dart';
 import 'package:zera3ati_app/screens/market_screen.dart';
 import 'package:zera3ati_app/screens/weather_screen.dart';
@@ -9,13 +7,30 @@ import 'package:zera3ati_app/widgets/main_drawer.dart';
 import 'package:get/get.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId})
+      : super(key: key);
+
+  final String id;
+  final String token;
+  final int assistantId;
 
   @override
   State<MainScreen> createState() {
     return _MainScreen();
   }
 }
+
+// String TokenGetter() {
+//   return token.value;
+// }
+
+// String IdGetter() {
+//   return id.value;
+// }
 
 class CropInfo {
   final String crop;
@@ -40,13 +55,25 @@ class _MainScreen extends State<MainScreen> {
     setState(() {
       _selectedIndex = index;
       if (_selectedIndex == 1) {
-        Get.to(const FarmingScreen());
+        Get.to(FarmingScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
       }
       if (_selectedIndex == 2) {
-        Get.to(WeatherScreen());
+        Get.to(WeatherScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
       }
       if (_selectedIndex == 3) {
-        Get.to(const MarketScreen());
+        Get.to(MarketScreen(
+          id: widget.id,
+          token: widget.token,
+          assistantId: widget.assistantId,
+        ));
       }
     });
   }
@@ -197,83 +224,9 @@ class _MainScreen extends State<MainScreen> {
       );
     }
 
-    // Widget CropOut() {
-    //   return Expanded(
-    //     child: ListView.builder(
-    //       itemCount: pickedCrops.length,
-    //       itemBuilder: (context, index) {
-    //         final cropInfo = pickedCrops[index];
-    //         final itemKey =
-    //             Key('$cropInfo.crop_$index'); // Unique key for each item
-
-    //         return Dismissible(
-    //           //key: ValueKey(pickedCrops[index]),
-    //           key: itemKey,
-    //           onDismissed: (direction) {
-    //             setState(() {
-    //               pickedCrops.removeAt(index);
-    //             });
-    //           },
-    //           background: Container(
-    //             color: Colors.red, // You can customize the background color
-    //             alignment: Alignment.centerLeft,
-    //             child: Icon(
-    //               Icons.delete,
-    //               color: Colors.white,
-    //             ),
-    //           ),
-    //           direction: DismissDirection.startToEnd,
-    //         );
-    //       },
-    //       children: pickedCrops.map((cropInfo) {
-    //         return Card(
-    //           child: Padding(
-    //             padding:
-    //                 const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-    //             child: Column(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: [
-    //                 Text(
-    //                   "${cropInfo.crop}",
-    //                   style: TextStyle(color: Colors.white),
-    //                 ),
-    //                 const SizedBox(
-    //                   height: 4,
-    //                 ),
-    //                 Row(
-    //                   children: [
-    //                     Text(
-    //                       '${cropInfo.landType}',
-    //                       style: TextStyle(color: Colors.white),
-    //                     ),
-    //                     const Spacer(),
-    //                     Row(
-    //                       crossAxisAlignment: CrossAxisAlignment.center,
-    //                       children: [
-    //                         const Icon(Icons.grass),
-    //                       ],
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //         );
-    //       }).toList(),
-    //     ),
-    //   );
-    // }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main Page'),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {},
-        //     icon: const Icon(Icons.account_circle),
-        //   ),
-        // ],
       ),
       floatingActionButton: SizedBox(
         height: 66,
@@ -456,119 +409,93 @@ class _MainScreen extends State<MainScreen> {
                 image: const AssetImage('assets/background_dark.jpg'),
                 fit: BoxFit.cover),
           ),
-          // child: Center(
-          //   child: Column(
-          //     //crossAxisAlignment: CrossAxisAlignment.start,
-          //     //mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       Column(children: [
-          //         pickedCrops.isEmpty
-          //     ? Text(
-          //         'Your crop list is empty.', // Your message here
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontSize: 16,
-          //         ),
-          //       )
-          //     : Expanded(
-          //         child: Container(
-          //           constraints: BoxConstraints(
-          //             minHeight: 200, // Adjust the minHeight as needed
-          //           ),
-          //           child: CropOut(),
-          //         ),
-          //       ),
-          //       ],),
-          //     ],
-          //   ),
-          // ),
           child: Center(
-            child: pickedCrops.isEmpty
-                ? Column(
-                    children: [
-                      Text(
-                        'Your crop list is empty.', // Your message here
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Personal Info Here',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                        ),
-                      ),
-                      Text(
-                        'BRUH',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                        ),
-                      ),
-                      // SizedBox(
-                      //   height: 280,
-                      // ),
-                      Expanded(child: CropOut()),
-                      SizedBox(
-                        height: 83,
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(width: 16),
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxHeight: _getModalHeight(context),
-                                    ),
-                                    child: CallOption(),
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              width: 66,
-                              height: 66,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.3),
-                                    blurRadius: 10,
-                                    spreadRadius: 2,
-                                    offset: Offset(0, 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  'Welcome...',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                  ),
+                ),
+                Text(
+                  'BRUH',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                  ),
+                ),
+                // SizedBox(
+                //   height: 280,
+                // ),
+                Expanded(child: CropOut()),
+                SizedBox(
+                  height: 83,
+                ),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(width: 16),
+                        GestureDetector(
+                          onLongPress: () {
+                            SnackBar(content: Text('I hate my life'));
+                          },
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxHeight: _getModalHeight(context),
                                   ),
-                                ],
-                                color: Colors.green[900],
-                              ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.call,
-                                    size: 36,
-                                    color: Colors.white,
+                                  child: CallOption(
+                                    id: widget.id,
+                                    token: widget.token,
+                                    assistantId: widget.assistantId,
                                   ),
-                                ],
-                              ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: 66,
+                            height: 66,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 10,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                              color: Colors.green[900],
+                            ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Icon(
+                                  Icons.call,
+                                  size: 36,
+                                  color: Colors.white,
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),

@@ -5,11 +5,28 @@ import 'package:get/get.dart';
 import 'package:zera3ati_app/screens/main_screen.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+  const SignupPage(
+      {Key? key,
+      required this.id,
+      required this.token,
+      required this.assistantId})
+      : super(key: key);
+
+  final String id;
+  final String token;
+  final int assistantId;
 
   @override
   _SignupPageState createState() => _SignupPageState();
 }
+
+// String TokenGetter() {
+//   return token.value;
+// }
+
+// String IdGetter() {
+//   return id.value;
+// }
 
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
@@ -23,7 +40,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> _signup() async {
-    final url = Uri.parse('http://192.168.1.16:8000/signup/');
+    final url = Uri.parse('http://127.0.0.1:8000/signup/');
     final body = json.encode({
       'id': _idNumber,
       'password': _password,
@@ -38,7 +55,11 @@ class _SignupPageState extends State<SignupPage> {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      Get.to(const MainScreen());
+      Get.to(MainScreen(
+        id: widget.id,
+        token: widget.token,
+        assistantId: widget.assistantId,
+      ));
     } else {
       // Handle error based on the status code
       Get.snackbar('Error', 'Signup failed: ${response.body}');
