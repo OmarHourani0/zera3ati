@@ -107,24 +107,32 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
     setState(() {
       isLoading = true;
     });
-    Uri url = Uri.parse('http://127.0.0.1:8000/submit_img/');
-    var request = http.MultipartRequest('POST', url);
-    request.files.add(await http.MultipartFile.fromPath('image', image.path));
-    // Print request details
-    print("Request URL: ${request.url}");
-    print("Request Method: ${request.method}");
-    print("Request Headers: ${request.headers}");
-    // Center(
-    //   child: CircularProgressIndicator(),
-    // );
-    // Convert the image to Base64 and print
-    String base64Image = base64Encode(image.readAsBytesSync());
-    print("Request Body (Image in Base64): $base64Image");
 
-    var response = await request.send();
+    final url = 'http://192.168.1.16:8000/submit_img/';
 
-    if (response.statusCode == 200) {
-// stop the loading sequence
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token ${widget.token}',
+    };
+
+    // Print the request body and headers before sending the request
+    print('Request Headers: $headers');
+
+    var response;
+
+    try {
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+      request.headers.addAll(headers);
+      request.files.add(await http.MultipartFile.fromPath('image', image.path));
+
+      response = await request.send();
+    } catch (e) {
+      print('Error sending request: $e');
+      // Handle the error here
+    }
+
+    if (response != null && response.statusCode == 200) {
+      // stop the loading sequence
       print('Image uploaded successfully!');
       setState(() {
         isLoading = false;
@@ -136,7 +144,7 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
       String responseBody = await response.stream.bytesToString();
       parseResponse(responseBody);
     } else {
-      //stop the loading and
+      // stop the loading and
       setState(() {
         isLoading = false;
         String? prediction = "";
@@ -146,6 +154,15 @@ class _DiseaseDetectionScreen extends State<DiseaseDetectionScreen> {
 
       print('Image upload failed.');
     }
+  }
+
+  @override
+  void dispose() {
+    // Reset the text variables when leaving the page
+    prediction = "";
+    treatment = "";
+    title = 'Your analysis will be shown below:';
+    super.dispose();
   }
 
   @override
