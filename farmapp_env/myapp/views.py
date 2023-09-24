@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from .models import CustomUser, Treatment, Assistant
+from .models import CustomUser, Treatment, Assistant, LoginInstance
 from .serializers import CustomUserSerializer, ImageUploadSerializer, AssistantSerializer
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
@@ -18,9 +18,36 @@ import os
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+from django.http import StreamingHttpResponse
+import time
+import asyncio
+import random
+import requests
+from django.contrib.auth.signals import user_logged_in
 
 
-def transform_prediction(data):
+
+def translate_with_google(text, target_language):
+    API_KEY = 'AIzaSyATDMOqTnKBJa7BiDpZ5F2vjOrrzjsVYjw'  # Replace with your Google API key
+    API_ENDPOINT = f'https://translation.googleapis.com/language/translate/v2?key={API_KEY}'
+
+    params = {
+        'q': text,
+        'target': target_language,
+        'source': 'en'  # Assuming source language is English
+    }
+
+    response = requests.post(API_ENDPOINT, params=params)
+    
+    if response.status_code == 200:
+        translated_text = json.loads(response.text)['data']['translations'][0]['translatedText']
+        return translated_text
+    else:
+        print(f"Error with status code: {response.status_code}: {response.text}")
+        return None
+
+
+def transform_prediction_n(data):
     prediction = data.get("prediction", "")
     
     if "Pepper__bell" in prediction:
@@ -36,12 +63,15 @@ class CustomUserList(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
+
+#this function is depricated and is not used anymore
 @csrf_exempt
 @api_view(['POST'])
 def user_view(request):
     if request.method == 'POST':
         idR = request.data.get('id')
         password = request.data.get('password')
+        firebase_token = request.data.get('firebase_token', None)  # Get the optional firebase_token
 
         # Check if user with the given ID exists
         try:
@@ -55,13 +85,21 @@ def user_view(request):
             if auth_user:
                 # User exists and password is correct
                 token, created = Token.objects.get_or_create(user=user)
+
                 return Response({"message": "Logged in successfully!", "token": token.key}, status=status.HTTP_200_OK)
             else:
                 # Password is incorrect
                 return Response({"error": "Invalid password."}, status=status.HTTP_400_BAD_REQUEST)
         else:
             # If user doesn't exist, create a new user
-            serializer = CustomUserSerializer(data=request.data)
+            serializer_data = {
+                'id': idR,
+                'password': password
+            }
+            if firebase_token:
+                serializer_data['firebase_token'] = firebase_token
+
+            serializer = CustomUserSerializer(data=serializer_data)
             if serializer.is_valid():
                 serializer.save()
                 token, created = Token.objects.get_or_create(user=serializer.instance)
@@ -76,6 +114,7 @@ def login_view(request):
     if request.method == 'POST':
         idR = request.data.get('id')
         password = request.data.get('password')
+        language = request.data.get('language')
 
         # Check if user with the given ID exists
         try:
@@ -88,7 +127,10 @@ def login_view(request):
         if auth_user:
             # User exists and password is correct
             token, created = Token.objects.get_or_create(user=user)
-            return Response({"message": "Logged in successfully!", "token": token.key}, status=status.HTTP_200_OK)
+            name = user.name
+            user_logged_in.send(sender=user.__class__, request=request, user=user)
+
+            return Response({"message": "Logged in successfully!", "token": token.key, "name": name }, status=status.HTTP_200_OK)
         else:
             # Password is incorrect
             return Response({"error": "Invalid password."}, status=status.HTTP_400_BAD_REQUEST)
@@ -154,6 +196,9 @@ def user_login_or_register(request):
             return Response({"message": "User created successfully!", "token": token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
 @csrf_exempt
 @api_view(['POST'])
 def run_ai(request):
@@ -161,15 +206,14 @@ def run_ai(request):
         token = request.META.get('HTTP_AUTHORIZATION').split()[1]
         user = Token.objects.get(key=token).user
 
+        language = request.data.get('language', 'en')
+
         serializer = ImageUploadSerializer(data=request.data)
         
         if serializer.is_valid():
-            # Get the image from the validated data
             image = serializer.validated_data['image']
 
-            # Check if the image is in memory or a temporary file
             if isinstance(image, InMemoryUploadedFile):
-                # Handle in-memory uploaded file
                 temp_filename = "/tmp/temp_uploaded_image.jpg"
                 with open(temp_filename, 'wb+') as destination:
                     for chunk in image.chunks():
@@ -178,61 +222,75 @@ def run_ai(request):
             else:
                 temp_image_path = image.temporary_file_path()
 
-            # Get prediction using AI function
             predicted_class = predict_class(temp_image_path)
 
-            # Transform the prediction
             data = {
                 'prediction': predicted_class
             }
-            data["prediction"] = transform_prediction(data)["prediction"]
+            data["prediction"] = transform_prediction_n(data)["prediction"]
 
-            # Construct the prompt for GPT
             prompt_text = f"What are the most effective and specific treatment methods for managing and eliminating {data['prediction']}? Please provide a detailed explanation of the steps, techniques, and products that can be used to effectively treat this plant disease."
+            translated_prediction = None
 
-            treatment_obj, created = Treatment.objects.get_or_create(
-                prompt=prompt_text
-            )
+            # Translate the prediction into Arabic if language is 'ar'
+            if language == 'ar':
+
+                translated_prediction = translate_with_google(data["prediction"], "ar")
+                prompt_text_ar = f"ما هي طرق العلاج الأكثر فعالية وتحديدًا لإدارة {translated_prediction} والقضاء عليها؟ يرجى تقديم شرح مفصل للخطوات والتقنيات والمنتجات التي يمكن استخدامها لعلاج هذا المرض النباتي بشكل فعال."
+
+            if language == 'en':
+                treatment_obj, created = Treatment.objects.get_or_create(prompt=prompt_text)
+            else:
+                treatment_obj, created = Treatment.objects.get_or_create(prompt_ar=prompt_text_ar)
 
             if created:
-                # If the Treatment object was newly created, it means the prompt was not previously in the database.
-                # Hence, query GPT to get the treatment
                 gpt.organization = "org-9r1abh0a9gJPObJuqkE3cmiw"
-                gpt.api_key = "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"  # Directly setting the API key (not recommended for production)
+                gpt.api_key = "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"
+                if language == 'en':
+                    response = gpt.ChatCompletion.create(
+                        model="gpt-3.5-turbo-0613",
+                        messages=[
+                            {"role": "user", "content": prompt_text}
+                        ]
+                    )
+                    treatment = response.choices[0].message['content'].strip()
+                    treatment_obj.response = treatment
 
-                response = gpt.ChatCompletion.create(
-                    model="gpt-3.5-turbo-0613",
-                    messages=[
-                        {"role": "user", "content": prompt_text}
-                    ]
-                )
-                treatment = response.choices[0].message['content'].strip()
+                else:
+                    response_ar = gpt.ChatCompletion.create(
+                        model="gpt-3.5-turbo-0613",
+                        messages=[
+                            {"role": "user", "content": prompt_text_ar}
+                        ]
+                    )
+                    treatment_ar = response_ar.choices[0].message['content'].strip()
+                    treatment_obj.response_ar = treatment_ar
 
-                # Update the treatment in the database for the newly created Treatment object
-                treatment_obj.response = treatment
                 treatment_obj.save()
 
             else:
-                # If not created, it means the Treatment object was already in the database.
-                # Hence, simply retrieve the treatment from the Treatment object
-                treatment = treatment_obj.response
+                if language == 'en':
+                    treatment = treatment_obj.response
+                else:
+                    treatment_ar = treatment_obj.response_ar
 
             final_response = {
-                'prediction': data['prediction'],
-                'treatment': treatment
+                'prediction_en': data['prediction'],
+                'prediction_ar': translated_prediction if translated_prediction else None,
+                'treatment_en': treatment if language == 'en' else None,
+                'treatment_ar': treatment_ar if language == 'ar' else None
             }
-
             return JsonResponse(final_response)
         else:
             return JsonResponse(serializer.errors, status=400)
+    return JsonResponse({"error": "Invalid request method."}, status=400)
+
 
 @csrf_exempt
 @api_view(['POST'])
 def run_crop_ai(request):
     if request.method == 'POST':
-        # token = request.META.get('HTTP_AUTHORIZATION').split()[1]
-        # user = Token.objects.get(key=token).user
-
+        # Extract the parameters from the request
         N = request.data.get('N')
         P = request.data.get('P')
         K = request.data.get('K')
@@ -240,16 +298,41 @@ def run_crop_ai(request):
         humidity = request.data.get('humidity')
         ph = request.data.get('ph')
         rainfall = request.data.get('rainfall')
+        
+        # Extract the language from the request, default to 'en' if not provided
+        language = request.data.get('language')
+        print(language)
+
+        # Load the translations dictionary
+        file_path = r'C:\Users\jacks\anaconda3\envs\farmapp_env\zera3ati\farmapp_env\myapp\dictionary.json'
+        with open(file_path, 'r', encoding='utf-8') as file:
+            translations = json.load(file)
 
         # Get prediction using AI function
         predicted_crop = predict_crop(N, P, K, temperature, humidity, ph, rainfall)
 
-        # Transform the prediction
+        # If the language is 'ar', translate the prediction
+        if language == 'ar':
+            if predicted_crop in translations:
+                print("found")
+                predicted_crop = translations[predicted_crop]
+            else:
+                # Translate prediction using Google Translate API
+                print('calling translate api')
+                translated_crop = translate_with_google(predicted_crop, "ar")
+                # Add the new translation to the dictionary
+                translations[predicted_crop] = translated_crop
+                # Update the JSON file with the new translation
+                with open(file_path, 'w', encoding='utf-8') as file:
+                    json.dump(translations, file, ensure_ascii=False, indent=4)
+                # Update the prediction to the translated version
+                predicted_crop = translated_crop
+
+        # Prepare the response data
         data = {
             'prediction': predicted_crop
         }
-        data["prediction"] = transform_prediction(data)["prediction"]
-
+        print(data['prediction'])
         return JsonResponse(data)
 
 @csrf_exempt
@@ -324,3 +407,35 @@ def Call_Assistant(request):
 
     # Return the ID of the assistant
     return JsonResponse({'assistant_id': assistant.id})
+
+async def generate_data():
+    while True:
+        data = random.randint(1, 100)
+        yield f"data: {data}\n\n"
+        await asyncio.sleep(3)
+
+async def event_stream(request):
+    response = StreamingHttpResponse(generate_data(), content_type="text/event-stream")
+    response['Cache-Control'] = 'no-cache'
+    response['Connection'] = 'keep-alive'
+    return response
+
+@csrf_exempt
+def sse(request):
+    response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+    response['Cache-Control'] = 'no-cache'
+    return response
+
+@api_view(['GET'])
+def last_login_instance(request):
+    try:
+        last_login = LoginInstance.objects.latest('timestamp')
+        response_data = {
+            'timestamp': last_login.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'user_id': last_login.user.id if last_login.user else None
+                            }
+    except LoginInstance.DoesNotExist:
+        response_data = {
+            'error': 'No login instances found'
+        }
+    return JsonResponse(response_data)

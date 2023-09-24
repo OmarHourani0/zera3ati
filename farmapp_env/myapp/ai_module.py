@@ -9,6 +9,11 @@ from sklearn.tree import DecisionTreeClassifier
 import joblib
 from sklearn.exceptions import DataConversionWarning
 import warnings
+import statsmodels
+
+
+#print joblib version
+print(joblib.__version__)
 
 # Load the saved model
 model = load_model(r"C:\Users\jacks\anaconda3\envs\farmapp_env\zera3ati\farmapp_env\myapp\cnn_model.h5")

@@ -6,15 +6,29 @@ from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 import re
+from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
+
 from PIL import Image
+
+phone_regex = RegexValidator(
+    regex=r'^\+9627\d{8}$',
+    message="Phone number must be entered in the format: '+9627xxxxxxxx'. Only 10 digits allowed."
+)
+
+
+class LoginInstance(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey('myapp.CustomUser', on_delete=models.CASCADE, null=True, blank=True)
+
 
 
 class Treatment(models.Model):
     prompt = models.TextField(unique=True)
+    prompt_ar = models.TextField(unique=True, null=True, blank=True)
     response = models.TextField()
+    response_ar = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, id, password=None, **extra_fields):
@@ -32,16 +46,12 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(id, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    id = models.BigIntegerField(
-        primary_key=True,
-        validators=[
-            MinValueValidator(1000000000),  # Minimum 10 digits
-            MaxValueValidator(9999999999)   # Maximum 10 digits
-        ]
-    )
+    id = models.CharField(validators=[phone_regex], max_length=13, unique=True, primary_key=True)
+    firebase_token = models.TextField(null=True, blank=True)  # Optional field for Firebase token
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    name = models.CharField(max_length=255, null=True, blank=True)
 
     # Override the groups and user_permissions fields to provide custom related_name
     groups = models.ManyToManyField(
@@ -83,5 +93,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Assistant(CustomUser):
     # If you want to add any additional fields specific to the assistant, you can add them here.
     # For example:
-    name = models.CharField(max_length=100)
     pass
+
+
+class AllLogin(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user) + ': ' + str(self.date)

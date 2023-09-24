@@ -7,7 +7,7 @@ from PIL import Image
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'password')
+        fields = ('id', 'name','password', 'firebase_token')
         extra_kwargs = {
             'password': {'write_only': True}  # Ensure password is not returned in API responses
         }
@@ -29,17 +29,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
         """
         user = CustomUser.objects.create_user(
             id=validated_data['id'],
-            password=validated_data['password']
+            password=validated_data['password'],
+            name = validated_data['name']
         )
+        if 'firebase_token' in validated_data:
+            user.firebase_token = validated_data['firebase_token']
+            user.save()
         return user
 
 class ImageUploadSerializer(serializers.Serializer):
     image = serializers.ImageField()
-
-class generateuidAgora(serializers.Serializer):
-    channelName = serializers.CharField(max_length=100)
-    uid = serializers.IntegerField()
-
 
 class AssistantSerializer(serializers.ModelSerializer):
     class Meta:

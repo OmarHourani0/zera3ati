@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "valiant-broker-399917",
+  "private_key_id": "b4cd0e0f1d31fa5f3c012af906bc0f17ca485efe",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDkkwi6QqU+PZhD\nkRwKjJF5scGAGavQdZFL0FEMlqVCatWXlJRwbgs8jdEgkkqawQ3HlXlGN2Lvj92k\nx0CgyFUNmCIVqQuLetv6ErAKjeThEdYl9Qes2pL9G3Gu7EEy6Q9cnKg7Jo+tingN\nlI7lm5Z4KCCPQe/5bP0vAv5kbkTRM/PJD6T9ps/Va0BQfsyWjcpa4pj/yfYRRJ32\nLDOtgzEUZjemTKp5FR29sP/DjO+RJ1HQeSS7MonDZta9mTvRBr2+1wLlQ59xpwQJ\npIyl58v3pQ1FaHYu150ismzZC9hNtLDh9UhPTDKNU6AOuzeMfmNRRQ2RSZ6kxGx4\n1Mb5k1ahAgMBAAECggEAAK+OvwVQatqDNI+wxHjVvmZZwOVC0lQp+I7iUV351rRM\nmgDyfZBc9QRtaFI8ClESNiM1CxCDOdoGBZap81mKhMkMMCGy1MsscgiAkfWJRmIX\n8QL2UA7TUlJU4dwYWXtgxgu7xvqng3MnB05m69ouxkNDjr55Rnes3kldY0Z/6xtB\n+BQP1QZ+to24tQKP/8xPiXO4cTfcXjOZF88n4QTAc83bPEJ6Rrt61pr4gxOWYUQJ\nC55P5Amd0N/KeRz7R2Wo9mJTsQdlLvDuwUbCrb9oRMt6ZJ48V7FLZkhzjfpadSTl\n99NlZ/qM3kvWaUFwIjEtMBCwXxSz+5EUHQ7+igGqeQKBgQD51bBCAjdbadHYkVfQ\nxc+MrdjVCwy9GmqYwFCED5uJ/kfnk3+21x+Hr/49tFyAGNH3oe9902kLUiddBtD6\nD3SpB71pHwEt9rCpmlD5mDhvEezKdqiuSY6gGiXclIiOnkdIL+XgH/ccS+KKmDLK\n3AHbEl27Ow9c4ausKTsUeik2aQKBgQDqNwjsEFRKiACSkrJx/O6g70QqkOgTSeWE\nb6J60qCSBPQcK0K7szPTdfEZjiolH5WOtiDU1Tl9zbYnU5DmnQhBQBTIWEr0ipkB\nyptnbUSUdMcm2kybjy0znX5KYPNXW/ae7IANDBK5CgCufGzm573zLk0e4hesAnzu\nWjOHNMXHeQKBgQDgSitW106DTtkJqFJCJ5RRI7HKcYUaMCEKyXx/UtO8awB6sjyy\nFSdFVYbWNpnklmPKASNUvvtLIpIcPgZWuJFvPneZbDBO521qlhOkQDhJ3rnKegSt\nk3Pr4A2lneOKxiYQdI/XSls6mBXlfwX6gNFZr39em4MLS74nbUyQ8asWIQKBgQDP\n8bDgNddAnOM1Pz1jatdK12PEDwedKHy4So0NUzfwrKk24UnMcFxRIGPA9rGAaDxW\nimk3zV/Py/YvkEgUF9OeaxCIl6tk1jDmoEW9XAwJamzul95wNnxBWVEpJE6ofyPF\nEeDWtKNi2fik8h+WGqZQ5AjgpIez1jmpPTiGkFoQsQKBgQDcvfuGkx+7GFsOo1Eo\nMrmvsdO0TcTaptXos9YIZ8I8bPSGltBZicpd4qVfDBtRxF969+PE18LPuLRrgV2a\n21qMYkvP2GeRgvm0txdPboCYe4aQqH+XHhr1GRagJBYn/Yv4a9eC5djICONHM0fv\ndcFPzYbi40s1mz+IjeXVtVB2TA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "zera3ati@valiant-broker-399917.iam.gserviceaccount.com",
+  "client_id": "102665359221377248629",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/zera3ati%40valiant-broker-399917.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

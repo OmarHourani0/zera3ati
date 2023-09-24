@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+
+ASGI_APPLICATION = 'farmapp.routing.application'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,10 +31,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'myapp.CustomUser'
-
+1
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,9 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "rest_framework.authtoken",
-    'myapp',
+    'myapp.apps.MyAppConfig',
+    'fcm_django',
+
+    
 
 ]
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -83,15 +91,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'farmapp.wsgi.application'
 
 # settings.py
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
+
 
 
 
@@ -105,7 +105,7 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = ['192.168.1.100', 'localhost', '127.0.0.1', '192.168.1.12', '192.168.1.16']
+ALLOWED_HOSTS = ['192.168.1.100', 'localhost', '127.0.0.1', '192.168.1.12', '192.168.1.16', 'ae90-176-29-224-164.ngrok-free.app', '192.168.100.98']
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -147,3 +147,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
+FCM_DJANGO_SETTINGS = {
+    "FCM_SERVER_KEY": "AAAAIkmlf9E:APA91bHvOcMHwXPdZiUOT7FlY13D3YOGvILxuHFvNbvCPEmSVp95k3UPS5a_cB_xm5hYLGdMOwwiCCaT_VEiaMvqOEmmj9jYFNp8ChPhTFw4aPbBpkMfizztzuuZohZ1KXiDLsr1vdaP"
+}
+
+
