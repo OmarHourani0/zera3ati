@@ -3,7 +3,7 @@ from django.urls import path
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from myapp.views import (CustomUserList, user_view, user_login_or_register, login_view, signup_view, run_ai, 
-                         login_view_assistant, signup_view_assistant, Call_Assistant, run_crop_ai, sse, event_stream, last_login_instance)
+                         login_view_assistant, signup_view_assistant, Call_Assistant, run_crop_ai, sse, event_stream, last_login_instance, display_market_price)
 from myapp import consumers
 from django.urls import re_path
 
@@ -20,6 +20,8 @@ urlpatterns = [
     path('sse/', sse, name='sse'),
     path('events/', event_stream, name='event_stream'),
     path('last-login/', last_login_instance, name='last_login_instance'),
+    path('users-list/', CustomUserList.as_view(), name='CustomUserList'),
+    path('market/', display_market_price, name='display_market_price'),
 
 
 

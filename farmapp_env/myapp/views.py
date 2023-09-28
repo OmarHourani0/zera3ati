@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import json
-from .ai_module import predict_class, predict_crop
+from .ai_module import predict_class, predict_crop, MarketPrice
 from PIL import Image
 import openai as gpt
 from django.core.cache import cache
@@ -24,6 +24,11 @@ import asyncio
 import random
 import requests
 from django.contrib.auth.signals import user_logged_in
+from django.http import HttpResponse
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
+mp=MarketPrice()
 
 
 
@@ -396,14 +401,33 @@ def Call_Assistant(request):
     # Verify the user ID
     try:
         user = CustomUser.objects.get(id=user_id)
+        user_id = 962712345679  # Not sure why you're setting this static value here
     except CustomUser.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
 
     # Verify the assistant name
     try:
         assistant = Assistant.objects.get(name=assistant_name)
+        channel_layer = get_channel_layer()
+        
+        #get assistant id stripped of all "+"
+        assistantid = assistant.id.replace('+', '')
+        room_group_name = f"chat_{assistantid}"
+        print(assistantid)
+        
+        # Use async_to_sync to make async call from synchronous context
+        async_to_sync(channel_layer.group_send)(
+            room_group_name,
+            {
+                'type': 'chat.message',  # This is the change. Use a known message type.
+                'message': f"Chat request from user {user_id}",
+                'sender_channel_name': "SYSTEM",
+                # You might want to add the user's channel name or other details if necessary
+            }
+        )
+
     except Assistant.DoesNotExist:
-        return JsonResponse({'error': 'Assistant not found'}, status=404)
+        return JsonResponse({'error': 'Assistant not found'}, status=418)
 
     # Return the ID of the assistant
     return JsonResponse({'assistant_id': assistant.id})
@@ -439,3 +463,46 @@ def last_login_instance(request):
             'error': 'No login instances found'
         }
     return JsonResponse(response_data)
+
+
+translation_dict = {
+    'Tomato': 'Tomatoes',
+    'Cucumber': 'Cucumbers',
+    'Eggplant': 'Eggplants (aubergines)',
+    'Potato': 'Potatoes',
+    'Onion': 'Onions and shallots, green',
+    'Watermelon': 'Watermelons',
+    'Cantaloupe': 'Cantaloupes',
+    'Grapes': 'Grapes',
+    'Pomegranate': 'Pomegranates',
+    'Fig': 'Figs',
+    'Strawberries': 'Strawberries'
+}
+
+def round_and_divide_nested_values(data):
+    for key, value_list in data.items():
+        for i, (crop, num) in enumerate(value_list):
+            value_list[i] = [crop, round(abs(num) / 1000, 2)]
+    return data
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure the user is authenticated
+def display_market_price(request):
+    data = json.loads(request.body)
+    language = data.get('language', 'en')
+    crops_list = data.get('crops_list', None)
+    specified_month = data.get('specified_month', None)
+    
+    # Translate the crops_list using the translation_dict
+    translated_crops_list = [translation_dict.get(crop.split('|')[0], crop.split('|')[0]) for crop in crops_list]
+    
+    # Print all variables
+    crops_list_str = str(translated_crops_list)
+    print(language + crops_list_str + specified_month)
+    result = mp.get_prices(language, translated_crops_list, specified_month)
+    
+    # Process the result to divide by 1000 and round
+    result = round_and_divide_nested_values(result)
+    
+    return HttpResponse(json.dumps(result), content_type='application/json')
