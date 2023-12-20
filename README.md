@@ -1,6 +1,6 @@
 # zera3ati_app
 
-A new Flutter project.
+The sexiest app you will ever see that is made for farmers
 
 ## Getting Started
   
